@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+</head>
+<style>
+    @font-face {
+        font-family: Kanit;
+        src: url(./kanit/Kanit-Medium.ttf) format('truetype');
+    }
+    body {
+        font-family: Kanit;
+        margin: 20px;
+        background-color: #C47BE4;
+    }
+    input, textarea {
+        margin-bottom: 5px;
+    }
+    #Form {font-style: italic;
+    font-style: unset;
+    color :#7132CA;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
+    border: solid #301CA0;
+    text-align: center; }
+
+    #name ,#surname {
+        border: 2.5px dashed #301CA0;
+    }
+</style>
+<body>
+    <h1 id="Form">Form</h1>
+    ชื่อ : <input class="name" type="text" id="name"><br><br>
+    นามสกุล : <input class="surname" type="text" id="surname"><br><br>
+    อายุ : <input type="number" id="age"><br><br>
+    เพศ :
+    <input type="radio" name="gender" value="male" id="male"> ชาย
+    <input type="radio" name="gender" value="female" id="female"> หญิง
+    <br><br>
+    งานอดิเรก :
+    <input type="checkbox" name="hobby" value="reading" id="reading"> อ่านหนังสือ
+    <input type="checkbox" name="hobby" value="traveling" id="traveling"> ท่องเที่ยว
+    <input type="checkbox" name="hobby" value="sports" id="sports"> กีฬา
+    <br><br>
+    คำอธิบายตัวเอง : <br>
+    <textarea id="description" rows="4" cols="50"></textarea>
+    <br><br>
+    <button onclick="submitForm()">Submit</button>
+    
+</body>
+</html>
