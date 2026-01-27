@@ -1,0 +1,43 @@
+# Docker Commands List
+
+# ดูรายการ containers ทั้งหมด (รวม stopped)
+docker ps -a
+
+# ดูเฉพาะ containers ที่กำลัง running
+docker ps
+
+# รัน container ใหม่
+docker run [OPTIONS] IMAGE [COMMAND]
+
+# ตัวอย่าง: รัน busybox ping google.com
+docker run busybox ping google.com
+
+# ดูรายการ images
+docker images
+
+# หลุด container
+docker start CONTAINER_ID_or_NAME
+
+# หยุด container
+docker stop CONTAINER_ID_or_NAME
+
+# ลบ container
+docker rm CONTAINER_ID_or_NAME
+
+# ลบ image
+docker rmi IMAGE_ID_or_NAME
+
+# ดูข้อมูล container
+docker inspect CONTAINER_ID_or_NAME
+
+# ดู logs ของ container
+docker logs CONTAINER_ID_or_NAME
+
+# สร้าง image จาก Dockerfile
+docker build -t IMAGE_NAME .
+
+# Push image ไปยัง registry
+docker push IMAGE_NAME
+
+# Pull image จาก registry
+docker pull IMAGE_NAME
