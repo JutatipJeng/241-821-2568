@@ -1,13 +1,37 @@
 console.log('index.js loaded successfully');
+const validateData = () => {
+    let erroors = [];
+    if (!formData.firstname){
+        error.push('กรุณากรอกชื่อ');
+    }
+    if (!formData.lastname){
+        error.push('กรุณากรอกนามสกุล');
+    }
+    if (!formData.age){
+        error.push('กรุณากรอกอายุ');
+    }
+    if (!formData.gender){
+        error.push('กรุณากรอกเพศ');
+    }
+    if (!formData.interest){
+        error.push('กรุณาเลือกสิ่งที่สนใจ 1 อย่าง');
+    }
+    if (!formData.description){
+        error.push('กรุณากรอกคำอธิบาย');
+    }
+    return errors;
+    
+    
+};
 
 function submitData() {
     console.log('submitData function called - START');
     
     // ดึงข้อมูลจากฟอร์ม
-    const firstnameInput = document.querySelector('input[name="firstname"]');
-    const lastnameInput = document.querySelector('input[name="lastname"]');
-    const ageInput = document.querySelector('input[name="age"]');
-    const descriptionInput = document.querySelector('textarea[name="description"]');
+    const firstnameInput = document.querySelector('input[name="firstname"]')||{};
+    const lastnameInput = document.querySelector('input[name="lastname"]')||{};
+    const ageInput = document.querySelector('input[name="age"]')||{};
+    const descriptionInput = document.querySelector('textarea[name="description"]')||{};
     
     if (!firstnameInput || !lastnameInput || !ageInput || !descriptionInput) {
         console.error('ไม่พบ input elements');
