@@ -3,6 +3,10 @@ const mysql = require('mysql2/promise');
 const app = express();
 const port = 8000
 app.use(express.json());
+const cors = require('cors');
+const bodyParser = require('body-parser');
+app.use(cors());
+app.use(bodyParser.json());
 
 let conn = null
 const initDBConnection = async () => {
@@ -33,6 +37,10 @@ app.post('/users', async (req, res) => {
        const user = req.body;
        if (!user || Object.keys(user).length === 0) return res.status(400).json({ message: 'Missing user data' });
        if (!conn) return res.status(500).json({ message: 'Database not connected' });
+       
+       // ลบค่า id ออกถ้าผู้ใช้ส่งเข้ามา (ให้ database จัดการ auto increment)
+       delete user.id;
+       
        const [result] = await conn.query('INSERT INTO users SET ?', user);
        console.log('insert result:', result);
        res.status(201).json({
