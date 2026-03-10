@@ -51,34 +51,60 @@ function submitData() {
     
     console.log('description:', description);
     
+    // element แสดงข้อความสถานะ (error/success)
+    const messageDOM = document.getElementById('message');
+    messageDOM.textContent = '';
+    messageDOM.className = '';
+    
     // ตรวจสอบข้อมูล
     if (!firstname || !firstname.trim()) {
         console.error('ไม่มี firstname');
-        alert('กรุณากรอกชื่อ');
+        messageDOM.textContent = 'กรุณากรอกชื่อ';
+        messageDOM.className = 'message error';
         return;
     }
     
     if (!lastname || !lastname.trim()) {
         console.error('ไม่มี lastname');
-        alert('กรุณากรอกนามสกุล');
+        messageDOM.textContent = 'กรุณากรอกนามสกุล';
+        messageDOM.className = 'message error';
+        return;
+    }
+    
+    // ตรวจสอบ firstname/lastname ว่ามีตัวเลขหรืออักษรพิเศษหรือไม่
+    // อนุญาตเฉพาะตัวอักษรไทย-อังกฤษและช่องว่าง
+    const invalidCharRegex = /[^a-zA-Z\u0E00-\u0E7F\s]/;
+    if (invalidCharRegex.test(firstname)) {
+        console.error('ชื่อมีตัวเลขหรืออักษรพิเศษ');
+        messageDOM.textContent = 'ชื่อห้ามมีตัวเลขหรืออักษรพิเศษ';
+        messageDOM.className = 'message error';
+        return;
+    }
+    if (invalidCharRegex.test(lastname)) {
+        console.error('นามสกุลมีตัวเลขหรืออักษรพิเศษ');
+        messageDOM.textContent = 'นามสกุลห้ามมีตัวเลขหรืออักษรพิเศษ';
+        messageDOM.className = 'message error';
         return;
     }
     
     if (!age) {
         console.error('ไม่มี age');
-        alert('กรุณากรอกอายุ');
+        messageDOM.textContent = 'กรุณากรอกอายุ';
+        messageDOM.className = 'message error';
         return;
     }
     
     if (!selectedGender) {
         console.error('ไม่มี gender');
-        alert('กรุณาเลือกเพศ');
+        messageDOM.textContent = 'กรุณาเลือกเพศ';
+        messageDOM.className = 'message error';
         return;
     }
     
     if (selectedInterests.length === 0) {
         console.error('ไม่มี interests');
-        alert('กรุณาเลือกงานอดิเรกอย่างน้อย 1 รายการ');
+        messageDOM.textContent = 'กรุณาเลือกงานอดิเรกอย่างน้อย 1 รายการ';
+        messageDOM.className = 'message error';
         return;
     }
     
@@ -88,42 +114,26 @@ function submitData() {
         lastname: lastname.trim(),
         age: parseInt(age),
         gender: selectedGender,
-        interests: selectedInterests,
+        interest: selectedInterests[0],
         description: description.trim()
     };
     
-    // แสดงข้อมูล
+    // log data for debugging but do not show to user
     console.log('ข้อมูลที่ส่ง:', formData);
+    try {
+         axios.post('http://localhost:8000/users', formData);
+        console.log('Data sent to backend successfully');
+        messageDOM.textContent = 'บันทึกข้อมูลสำเร็จ';
+        messageDOM.className = "message success";
+    } catch (error) {
+        if (error.response) {
+            console.log('Backend responded with an error:', error.response.data);
+            messageDOM.textContent = 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์: ' + error.response.data.message;
+        } else {
+            console.error('Error sending data:', error);
+            messageDOM.textContent = 'เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง backend';
+        }
+        messageDOM.className = "message error";
+    }
     
-    // แสดงข้อมูลในรูปแบบสวย
-    let interestText = formData.interests.join(', ');
-    let message = `
-ข้อมูลของคุณ:
-- ชื่อ: ${formData.firstname}
-- นามสกุล: ${formData.lastname}
-- อายุ: ${formData.age} ปี
-- เพศ: ${formData.gender}
-- งานอดิเรก: ${interestText}
-- คำอธิบาย: ${formData.description || 'ไม่มี'}
-    `;
-    
-    alert(message);
-    
-    // ส่งข้อมูลไปยังเซิร์ฟเวอร์ (ตัวอย่าง)
-    // fetch('/api/submit', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(formData)
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     console.log('ข้อมูลส่งสำเร็จ:', data);
-    //     alert('ส่งข้อมูลสำเร็จ!');
-    // })
-    // .catch(error => {
-    //     console.error('เกิดข้อผิดพลาด:', error);
-    //     alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
-    // });
 }
