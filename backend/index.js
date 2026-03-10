@@ -30,11 +30,38 @@ app.get('/users', async (req, res) => {
         res.status(500).json({ message: 'Error fetching users', error: error.message });
     }
 })
-
+const validateData = () => {
+    let erroors = [];
+    if (!formData.firstname){
+        error.push('กรุณากรอกชื่อ');
+    }
+    if (!formData.lastname){
+        error.push('กรุณากรอกนามสกุล');
+    }
+    if (!formData.age){
+        error.push('กรุณากรอกอายุ');
+    }
+    if (!formData.gender){
+        error.push('กรุณากรอกเพศ');
+    }
+    if (!formData.interest){
+        error.push('กรุณาเลือกสิ่งที่สนใจ 1 อย่าง');
+    }
+    if (!formData.description){
+        error.push('กรุณากรอกคำอธิบาย');
+    }
+    return errors;
+    
+    
+};
 // path = POST /users สำหรับเพิ่ม user ใหม่
 app.post('/users', async (req, res) => {
    try {
        const user = req.body;
+       let errors = validateData(user);
+       if (errors.length > 0) {
+           return res.status(400).json({ message: 'Validation errors', errors });
+       }
        if (!user || Object.keys(user).length === 0) return res.status(400).json({ message: 'Missing user data' });
        if (!conn) return res.status(500).json({ message: 'Database not connected' });
        
