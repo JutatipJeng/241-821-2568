@@ -30,25 +30,25 @@ app.get('/users', async (req, res) => {
         res.status(500).json({ message: 'Error fetching users', error: error.message });
     }
 })
-const validateData = () => {
-    let erroors = [];
-    if (!formData.firstname){
-        error.push('กรุณากรอกชื่อ');
+const validateData = (user) => {
+    let errors = [];
+    if (!user.firstname){
+        errors.push('กรุณากรอกชื่อ');
     }
-    if (!formData.lastname){
-        error.push('กรุณากรอกนามสกุล');
+    if (!user.lastname){
+        errors.push('กรุณากรอกนามสกุล');
     }
-    if (!formData.age){
-        error.push('กรุณากรอกอายุ');
+    if (!user.age){
+        errors.push('กรุณากรอกอายุ');
     }
-    if (!formData.gender){
-        error.push('กรุณากรอกเพศ');
+    if (!user.gender){
+        errors.push('กรุณากรอกเพศ');
     }
-    if (!formData.interest){
-        error.push('กรุณาเลือกสิ่งที่สนใจ 1 อย่าง');
+    if (!user.interest){
+        errors.push('กรุณาเลือกสิ่งที่สนใจ 1 อย่าง');
     }
-    if (!formData.description){
-        error.push('กรุณากรอกคำอธิบาย');
+    if (!user.description){
+        errors.push('กรุณากรอกคำอธิบาย');
     }
     return errors;
     
@@ -127,6 +127,34 @@ app.delete('/users/:id', async (req, res) => {
             message: 'Error delete user',
             error: error.message
         });
+    }
+});
+
+app.put('/users/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const user = req.body;
+        let errors = validateData(user);
+        if (errors.length > 0) {
+            return res.status(400).json({ message: 'Validation errors', errors });
+        }
+        if (!user || Object.keys(user).length === 0) return res.status(400).json({ message: 'Missing user data' });
+        if (!conn) return res.status(500).json({ message: 'Database not connected' });
+        
+        // ลบค่า id ออกถ้าผู้ใช้ส่งเข้ามา (ให้ database จัดการ auto increment)
+        delete user.id;
+        
+        const [result] = await conn.query('UPDATE users SET ? WHERE id = ?', [user, id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        console.log('update result:', result);
+        res.json({
+            message: 'User updated successfully'
+        });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Error updating user', error: error.message });
     }
 });
 
