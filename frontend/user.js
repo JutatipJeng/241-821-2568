@@ -12,7 +12,8 @@ window.onload = async() => {
         let user = response.data[i];
         htmlData += `<div>
         ${user.id} - ${user.firstname} ${user.lastname}
-        <button>edit</button>
+        <button class="edit" data-id="${user.id}">edit</button>
+ 
         <button class = 'delete' data-id='${user.id}'>delete</button>
 
         </div>`
@@ -33,6 +34,14 @@ window.onload = async() => {
             } catch (error) {
                 console.error(`Error deleting user with id ${id}:`, error);
             }
+        });
+    }
+
+    const editDOMs = document.getElementsByClassName('edit');
+    for (let i = 0; i < editDOMs.length; i++) {
+        editDOMs[i].addEventListener('click', (event) => {
+            const id = event.target.dataset.id;
+            window.location.href = `index.html?id=${id}`;
         });
     }
    
